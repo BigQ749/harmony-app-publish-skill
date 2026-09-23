@@ -1,6 +1,6 @@
 ---
 name: harmony-app-publish
-description: 按国内华为 HarmonyOS NEXT 上架路径，从网页壳、包名对齐、发布签名、商店文案、9:16 截图到 AGC 提审。Use when 鸿蒙上架、华为应用市场、AppGallery Connect、AGC、HAP、APP、软著、992、993、单机应用、发布证书、Profile、想吃先停式套壳。
+description: 按国内华为应用市场上架 HarmonyOS NEXT 与配套安卓包。从网页壳、包名、发布签名、商店短文案、9:16 截图、公网隐私页到 AGC 提审，并避开云测选错老手机。Use when 鸿蒙上架、华为应用市场、AppGallery Connect、AGC、HAP、APP、APK、软著、992、993、单机应用、发布证书、Profile、启动失败、216 图标、隐私网址、想吃先停、正确时刻、锻体。
 ---
 
 # 鸿蒙应用上架
@@ -13,115 +13,78 @@ description: 按国内华为 HarmonyOS NEXT 上架路径，从网页壳、包名
 做成啥：能在鸿蒙手机打开的 App
 这版包含：一条能点完的主路径
 这版不做：真支付 / 云同步 / Google Play / 社交群控
-怎么算做好：主路径能点完；商店材料齐
+怎么算做好：主路径能点完；商店材料齐；传上去的是已签名的对的包
 ```
 
-一次只动一个产品目录。不要提审已上架的微信小程序，除非他亲口说改小程序。
+一次只动一个产品目录。先读该产品自己的 `AGENTS.md`。不要把三款文案抄混。不要提审已上架的微信小程序，除非他亲口说改小程序。
 
 ## 默认技术
 
-能做成网页的，做成网页，再用鸿蒙 WebView 壳。不要一上来纯 ArkTS 重写整套 UI。
+能做成网页的，做成网页，再用壳打开。不要一上来纯 ArkTS 重写整套 UI。
 
-- 网页：`base: "./"`。鸿蒙包打成 **一条 IIFE**（`app.js` + `app.css`），ArkWeb 吃不下 `type=module`，会白屏「正在打开…」。
-- 启动：rawfile 拷到 `filesDir`，用 `file://` 打开，写入 `--sat` / `--sab`。
-- DevEco **只打开** `harmony/`，不要打开整个产品根。
-- 包名：先在 AGC 建 **HarmonyOS 应用**（不要建成安卓应用），拿到包名再写入 `AppScope/app.json5`。建议 `com.主人拼音.产品拼音.hmos`，避免和安卓包名撞。
-- 单机产品：不要申请 `ohos.permission.INTERNET`。选「单机 APP」时包里绝不能带网络权限。
-- 不接真支付。演示支付必须在介绍和审核备注里写清。
+- 网页：`base: "./"`。打成 **一条 IIFE**（`app.js` + `app.css`）。ArkWeb 吃不下 `type=module`，会白屏停在「正在打开…」。
+- 鸿蒙：DevEco **只打开** `harmony/`。页面放 rawfile，用 `resource://rawfile/index.html`，或拷到 filesDir 后用 `file://`。写入 `--sat` / `--sab`。
+- 鸿蒙包名建议 `com.主人拼音.产品拼音.hmos`。先在 AGC 建 **HarmonyOS 应用**，再把包名写入 `app.json5`。最低系统写鸿蒙 5（`5.0.0(12)`）及以上。
+- 安卓是 **另一个应用**，另一包名，不要以 `.huawei` / `.HUAWEI` 结尾（那是联运游戏）。用 WebView 打开 `file:///android_asset/www/index.html`。不要只靠 `https://appassets.androidplatform.net` 拦截，鸿蒙 2/3/4 会打不开。
+- 单机：鸿蒙不要 `ohos.permission.INTERNET`，安卓不要 `android.permission.INTERNET`。后台选「单机 APP」。
+- 同一控制台能传两种包：鸿蒙栏只传 `*-signed.app`，安卓栏只传已签名 APK。
 
-完整命令、表单粘贴、错误码见 [reference.md](reference.md)。想吃先停对照见 [examples.md](examples.md)。
+命令、表单、错误码见 [reference.md](reference.md)。三款对照见 [examples.md](examples.md)。
 
 ## 作业单（按序勾）
 
 ```
 - [ ] 1 主路径在浏览器点通
 - [ ] 2 AGC 已建 HarmonyOS 应用，包名写入 app.json5
-- [ ] 3 IIFE 网页拷进 rawfile，DevEco Run 真机（模拟器可选，空闲内存要 ≥4GB）
+- [ ] 3 IIFE 进 rawfile；DevEco 模拟器或真机点通（模拟器是鸿蒙 5/6，空闲内存 ≥4GB）
 - [ ] 4 软著已递（没证：可填资料，不能点最终提交）
-- [ ] 5 隐私正文与软件一致；网上能打开的隐私网址（提审才必须）
-- [ ] 6 图标 1024 PNG；介绍截图 3–10 张，9:16，1080×1920，PNG≤5MB
-- [ ] 7 介绍 / 权限 / 个人信息表与软件一致
-- [ ] 8 发布证书 + 发布 Profile（禁止用自动签名）
+- [ ] 5 隐私正文与软件一致；公网 https 隐私页（应用内 html 不算）
+- [ ] 6 图标：216 方角 PNG，另备 1024；截图 3–10 张，1080×1920，PNG≤5MB，真界面
+- [ ] 7 介绍写短、写给用户、与软件一致
+- [ ] 8 发布证书 + 发布 Profile（禁止自动签名）
 - [ ] 9 只上传 *-signed.app
-- [ ] 10 单机就选单机；联网才填工信部备案
+- [ ] 10 单机就选单机；不填备案；不写「服务器在中国大陆」
+- [ ] 11 若做安卓：新应用、新包名、file 打开、上传密钥只交 PEM、桌面放已签名 APK
 ```
 
-## 1. 网页打进鸿蒙
+主人去下证书、做实名时，并行做截图、隐私页和商店短文案。不要干等。
 
-1. Chrome 里先把主路径点通。
-2. `vite.harmony.config.ts`：IIFE，`outDir: dist-harmony`，`assetsInlineLimit` 加大。
-3. 脚本拷到 `harmony/entry/src/main/resources/rawfile`，写不带 module 的 `index.html`。
-4. `Index.ets`：`getUIContext().getHostContext()`；根节点必须是容器；先不要 `onPageBegin` / `onConsole`。
-5. 改网页后必须先同步 rawfile，再 DevEco Run。浏览器预览不能当上架包。
+## 商店文案
 
-白屏：是不是又打成了 ES module；rawfile 有没有 `app.js`。
+你写，他粘。给用户看的字要短、要真。禁止：官方、最佳、首创、极致、疗效、减脂增肌承诺、真扣款。演示支付写「不产生真实交易」。介绍里不放电话、邮箱、外链。看后台字数再写：一句话栏有的只允许 17 字。第一版的「新版本特性」写「第一版」做了什么，不要写「修复若干问题」。
 
-## 2. AGC 建应用
+## 发布签名
 
-1. https://developer.huawei.com/consumer/cn/service/josp/agc/index.html
-2. 项目 → **添加 HarmonyOS 应用**。
-3. 记下包名、APP ID。工程 `bundleName` 必须与此完全一致。
-4. 分类、标签按产品；电话邮箱必须是主人能接到的。
+自动签名只能调试。未签名上传会 992 / 完整性失败。
 
-## 3. 商店材料
+1. 本地 PKCS12 + CSR（ECC / SHA256withECDSA）。密钥放 `<产品>/.sdks/harmony-sign/`，不进 git，不写进交接正文。
+2. 主人：AGC 证书 → 发布证书 → 上传 CSR → 下载 `.cer`。
+3. Profile → 发布 → 绑当前鸿蒙应用和这张证书 → 下载 `.p7b`。
+4. `hap-sign-tool.jar sign-app` 签 `*-unsigned.app`，`-inForm zip`。
+5. `verify-profile`：`type=release` 且 bundle-name 等于工程包名。再上传 `*-signed.app`。
 
-你写，他粘。禁止：官方、最佳、真扣款、疗效/收益承诺。演示能力必须写「不产生真实交易」。截图必须是真界面。
+主人说「证书好了」：先在桌面、下载、产品目录找文件。浏览器常加成 `.cer.cer`、`.p7bRelease.p7b`。
 
-**介绍截图**
+安卓若选「方式一」（华为保管签名密钥）：仍要本地上传密钥 `.jks`，只把证书 PEM 传给 AGC，不要传私钥。口令不打印、不进仓库。
 
-- 竖屏 9:16，最低 1080×1920，PNG/JPG≤5MB（或 WEBP≤200KB），3–10 张且互不相同。
-- 网页加 `?shot=1` 去预览台。
-- 无头 Chrome：逻辑像素 `360×640`、`deviceScaleFactor: 3`。
-- **先** `evaluateOnNewDocument` 写入演示数据，再打开目标页。同一 URL 不会自动刷新。
-- 不要交 1080×2340。
+## 云测
 
-**隐私 / 个人信息表**
+不是上架必做。鸿蒙包只选鸿蒙 5 或更新的机器。P40 / nova 9 / Mate 30（鸿蒙 2、3、4）跑不了 NEXT 包，六次「启动失败」是选错机器。这三台只测安卓 APK。无登录就不要填账号和 xPath。
 
-- 本机有称呼、手机号、订单就选「涉及个人信息收集」。
-- 不勾广告、个性化推荐、统计分析、推送、位置。
-- 上传服务器：否。分享不收集通讯录。
-- 单机：权限写「不申请网络权限」，不要再写 INTERNET。
-- 注销 = 应用内重置 + 卸载。没有云账号。
+## 隐私与个人信息
 
-**备案**
-
-- 单机且包内无网络权限：选单机 APP，备案不涉及。
-- 包内有 INTERNET 却选单机：审核必挂。
-
-## 4. 发布签名（上架关键）
-
-自动签名只能调试，传商店会报 992 / 完整性失败。
-
-1. 本地生成 PKCS12 + CSR（ECC / SHA256withECDSA），密钥放产品外的 `.sdks/harmony-sign/`，不进 git。
-2. 主人在 AGC：**证书 → 新增 → 发布证书**，上传 CSR，下载 `.cer`。
-3. **Profile → 新增 → 发布**，绑当前 HarmonyOS 应用和这张证书，下载 `.p7b`。
-4. 用 `hap-sign-tool.jar sign-app` 签 **unsigned.app**，得到 `*-signed.app`。
-5. 先 `verify-profile`：`type=release` 且 `bundle-name` 等于工程包名。再上传。
-
-只传 `*-signed.app`。不要传 unsigned.app / .hap。
-
-主人说「证书好了」时：先在桌面、下载、产品目录找 `.cer` / `.p7b`（文件名常被浏览器加成 `.cer.cer`、`.p7bRelease.p7b`），拷到签名目录再打。
-
-## 5. 提审
-
-没软著、没网上隐私网址：资料可先填，不要点最终提交。
-
-审核备注默认：
-
-```text
-本应用不提供真实配送，不进行真实收款。涉及支付或进度的界面均为演示，不会产生扣款。
-```
-
-单机则补一句：不申请网络权限，数据仅保存在本机。
+本机有称呼、身体、训练、饮食、睡眠、订单，就选「涉及个人信息收集」。不勾广告、个性化推荐、统计分析、推送、位置。上传服务器：否。存储写「只在这台手机，直到应用内重置或卸载」。不要写「中国境内服务器」。注销 = 应用内重置 + 卸载。没有云账号。
 
 ## 主人必须亲自做
 
-华为实名、软著、AGC 登录、下载 cer/p7b、填真人电话邮箱、把隐私页挂到能打开的网址、点最终提交。其余你做。
+华为实名、软著、AGC 登录、下载 cer/p7b、填真人电话邮箱、把隐私页挂到公网、点最终提交。其余你做。
 
 ## 禁止
 
 - 把网页地址交给华为当 App
-- 用调试证书 / 自动签名上传
-- 介绍与软件不一致
-- 为「单机」撒谎却保留 INTERNET
-- 把 keystore 密码、cer/p7b 写进 git 或交接手册正文
+- 用调试证书或自动签名上传
+- 介绍与软件不一致，截图用假图
+- 单机却留着网络权限，或备案选「服务器在中国大陆」
+- 鸿蒙包和安卓包用同一个包名，或安卓包名以 `.huawei` 结尾
+- 把 keystore 密码、cer、p7b、pem 私钥写进 git 或交接正文
+- 编下载量、收入、独家首发、海外上架、华为账号登录

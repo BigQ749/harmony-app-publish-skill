@@ -32,7 +32,7 @@ C:\Users\<你>\.cursor\skills\harmony-app-publish\
 |---|---|
 | `SKILL.md` | 作业单和红线 |
 | `reference.md` | 命令、隐私表、错误码 |
-| `examples.md` | 想吃先停对照，不要抄业务文案 |
+| `examples.md` | 想吃先停、正确时刻、锻体对照，不要抄业务文案 |
 
 ## 触发说法
 

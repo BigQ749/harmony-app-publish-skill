@@ -113,6 +113,50 @@ AGC 列表点错误码看详情。官方：https://developer.huawei.com/consumer
 - 模拟器 008010055：空闲内存 <4GB，改真机
 - Waiting for emulator：先等桌面再 Run
 - 打开了预览台：DevEco 打开了产品根而不是 `harmony/`
+- 资源管理器搜不到 `.app`：有的搜索会藏这个后缀，用命令行 `dir` 看 `harmony/build/outputs/default/`
+
+## 安卓包（给鸿蒙 2/3/4 和安卓手机）
+
+与鸿蒙包分开建应用。包名不要带 `.hmos`，也不要以 `.huawei` 结尾。
+
+壳：最小 WebView，网页放 `assets/www/`，打开 `file:///android_asset/www/index.html`。`setAllowFileAccess(true)`。不要申请 INTERNET。`isEmbeddedShell()` 要认 `file:`、`android_asset`、`rawfile`，这样不会去注册 Service Worker。
+
+签名方式一：AGC 生成并保管应用签名密钥，不能导出。你仍要做上传密钥：
+
+1. `keytool` 生成 JKS（RSA 2048）。口令放 `.sdks/android-sign/password.txt`，文件以换行结尾，但不靠 `file:` 传给 apksigner（会报 end of file）。用环境变量 `--ks-pass env:名字`。
+2. `keytool -exportcert -rfc` 只导出证书 PEM。桌面给主人的是 PEM，不是 jks。
+3. 用这把上传密钥签 release APK。AGC 再用它保管的密钥重签。
+
+构建机：系统 Java 8 不够，用 JDK 17。`d8` 要带上全部 class，含匿名内部类。`aapt dump` 不要直接打中文路径，先拷到英文路径。PowerShell 5 脚本含中文路径时存成 UTF-8 BOM。
+
+验包：`package` 名对、无 `uses-permission`、能在 API 26+ 安装。桌面文件名用产品中文名，例如 `锻体安卓.apk`。
+
+## 截图与图标
+
+- 介绍截图：逻辑像素 360×640，`deviceScaleFactor: 3`，得到 1080×1920。不要 1080×2340。
+- 先写入演示数据，再打开目标页。同一 URL 不刷新，React 会把空状态写回去。
+- 页内滚动要滚真正的滚动容器，不要只滚 window。
+- 减弱动效，避免截到半截动画。
+- 应用图标栏要 216×216 方角 PNG，不要预圆角，并与包内图标同一张画。另备 1024×1024 给要大图的栏。
+
+## 公网隐私页
+
+应用内 `privacy.html` 不够。提审栏要 http 或 https，审核员打得开。GitHub Pages 这类静态页可以。隐私政策和隐私权利可以填同一个网址。页面写清：存哪、不上传、怎么删（应用内重置或卸载）、开发者名、覆盖的包名。
+
+## 云测怎么选
+
+| 上传的包 | 能测的机器 | 不要选 |
+|---|---|---|
+| `*-signed.app`（鸿蒙 5+） | 鸿蒙 5、6、NEXT | 鸿蒙 2/3/4：P40、nova 9、Mate 30 |
+| 已签名 APK | 上面那些老鸿蒙和安卓机 | 不要把 `.app` 传进安卓栏 |
+
+「首次启动失败 / 再次启动失败」先看系统版本。老鸿蒙打不开 NEXT 包是选错包，不是业务崩了。安卓包若在老鸿蒙上启动失败，先查是不是还在用 https 虚拟域名加载网页。
+
+无登录：登录步骤、xPath、自定义步骤留空。只跑兼容性即可，大约 15 分钟。
+
+## 换电脑先改的路径
+
+DevEco 不一定在 `E:\APP\DevEco Studio`。先找到 `hvigorw.js`、`hdc.exe`、`hap-sign-tool.jar`、模拟器 `Emulator.exe`，再改命令里的盘符。产品目录也不要假设还在 `D:\APP`。
 
 介绍文档：https://developer.huawei.com/consumer/cn/doc/app/50104-01
 发布准备：https://developer.huawei.com/consumer/cn/doc/doccenter-submission/agc-help-release-app-prepare-0000002306311921
