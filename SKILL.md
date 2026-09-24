@@ -1,11 +1,13 @@
 ---
 name: harmony-app-publish
-description: 按国内华为应用市场上架 HarmonyOS NEXT 与配套安卓包。从网页壳、包名、发布签名、商店短文案、9:16 截图、公网隐私页到 AGC 提审，并避开云测选错老手机。Use when 鸿蒙上架、华为应用市场、AppGallery Connect、AGC、HAP、APP、APK、软著、992、993、单机应用、发布证书、Profile、启动失败、216 图标、隐私网址、想吃先停、正确时刻、锻体。
+description: 做鸿蒙单机 App，并按国内华为应用市场上架 HarmonyOS NEXT 与配套安卓包。做 App 时先读 make.md，再调界面和鸿蒙技能。上架覆盖网页壳、包名、发布签名、商店短文案、9:16 截图、公网隐私页和 AGC 提审。Use when 做鸿蒙、开发鸿蒙、鸿蒙 App、鸿蒙应用、HarmonyOS 应用、鸿蒙上架、华为应用市场、AppGallery Connect、AGC、HAP、APP、APK、软著、992、993、单机应用、发布证书、Profile、启动失败、216 图标、隐私网址、想吃先停、正确时刻、锻体。
 ---
 
 # 鸿蒙应用上架
 
 主人是不写代码的小白。大白话。技术你定。新应用先写目标框，等他说「开始」再写业务；上架机械步骤直接做。
+
+用户要做能在鸿蒙手机打开的 App、还没进入提审：先读 [make.md](make.md)，按它调界面和鸿蒙技能。壳的做法仍用下面「默认技术」。签名、商店、提审用本文作业单。
 
 ```text
 给谁用：
