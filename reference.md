@@ -1,3 +1,5 @@
+> 2026-10-21：下文保留历史命令示例，不作为固定路径/政策/错误原因。当前依据 [交付契约](references/release-contract.md)、[AGC 草稿流程](references/agc-drafts.md)、[隐私与权限](references/privacy-permissions.md) 与 [运行专项](references/runtime-regressions.md)。用户要求自检时启动并读报告；已授权后台操作可以执行，提交边界单独核对。
+
 # 鸿蒙上架 · 命令与表单
 
 路径按本机默认。换机器时先确认 DevEco。
@@ -85,7 +87,7 @@ java -jar hap-sign-tool.jar verify-app -inFile signed.hap -outCertChain out-cert
 
 管理：无云账号；重置/卸载即删除。
 
-存储：仅本机；期限到卸载或重置。国家格可写「中国境内。仅本机存储，不上传。」跨境：不涉及。
+存储：仅本机；期限到卸载或重置。无服务器时明确无服务器、本机处理；不得虚填服务器国家。跨境：不涉及。
 
 联系我们：齐赛军式「开发者真名 + 包名 + 真电话 + 真邮箱」。假号会打回。
 
